@@ -7,7 +7,7 @@ const Wrapper = styled.div`
 `;
 
 function App() {
-  return <Wrapper>마늘의 성 🧄🏰</Wrapper>;
+  return <Wrapper>마늘의 성 🧄🏰 <br></br> CI/CD 테스트~</Wrapper>;
 }
 
 export default App;
