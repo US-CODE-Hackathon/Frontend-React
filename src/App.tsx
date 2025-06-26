@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 
 const Wrapper = styled.div`
   padding: 2rem;
@@ -7,7 +8,21 @@ const Wrapper = styled.div`
 `;
 
 function App() {
-  return <Wrapper>마늘의 성 🧄🏰 <br></br> CI/CD 테스트~</Wrapper>;
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('https://yeachan.modie.site/test')
+      .then((res) => res.text())
+      .then((data) => setMessage(data))
+  }, []);
+
+  return (
+    <Wrapper>
+      마늘의 성 🧄🏰 <br />
+      CI/CD 테스트~ <br />
+      응답: {message}
+    </Wrapper>
+  );
 }
 
 export default App;
