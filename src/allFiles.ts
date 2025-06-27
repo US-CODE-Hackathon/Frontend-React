@@ -14,6 +14,7 @@ import FamilyArchiveCardList from './family/archive/components/ArchiveCardList';
 import FamilyBottomNavigation from './family/common/components/BottomNavigation';
 import FamilyArchiveDetail from './family/archiveDetail/pages';
 import FamilyArchiveDetailData from './family/archiveDetail/components/ArchiveDetailData';
+import FamilyAutobiography from './family/autobiography/pages';
 
 export {
   KioskMain,
@@ -32,4 +33,5 @@ export {
   FamilyBottomNavigation,
   FamilyArchiveDetail,
   FamilyArchiveDetailData,
+  FamilyAutobiography,
 };
