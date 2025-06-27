@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as S from './style';
 import * as C from '@/allFiles';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -9,7 +10,7 @@ const Camera = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isCaptured, setIsCaptured] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
-
+  const navigate = useNavigate()
   // 카메라 접근
   useEffect(() => {
     const startCamera = async () => {
@@ -58,6 +59,7 @@ const Camera = () => {
 
   const handleSend = () => {
     console.log('보내는 이미지:', capturedImage);
+    navigate('/forwarding')
     // TODO: 가족에게 보내는 API or 다음 라우팅 처리
   };
 
