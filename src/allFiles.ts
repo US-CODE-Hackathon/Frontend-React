@@ -1,7 +1,12 @@
 import KioskMain from './kiosk/pages/Main';
 import KioskSplash from './kiosk/pages/Splash';
+import KioskOnGoing from './kiosk/pages/OnGoing';
+import KioskCamera from './kiosk/pages/Camera';
+import KioskForwarding from './kiosk/pages/Forwarding'
 import KioskHeader from './kiosk/components/Header';
 import KioskButton from './kiosk/components/Button';
+import ProgressBar from './kiosk/components/Progressbar';
+import ForwardingSuccess from './kiosk/pages/Forwarding/Success';
 
 import FamilyMain from './family/main/pages';
 import AINotification from './family/main/components/AiNotification';
@@ -21,8 +26,13 @@ import FamilyAutography from './family/autobiography/read/pages';
 export {
   KioskMain,
   KioskSplash,
+  KioskOnGoing,
+  KioskCamera,
+  KioskForwarding,
+  ForwardingSuccess,
   KioskHeader,
   KioskButton,
+  ProgressBar,
   // Family components
   FamilyMain,
   AINotification,
