@@ -1,27 +1,20 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import * as R from './allFiles'
 
-const Wrapper = styled.div`
-  padding: 2rem;
-  color: black;
-  background: papayawhip;
-`;
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    fetch('https://yeachan.modie.site/test')
-      .then((res) => res.text())
-      .then((data) => setMessage(data))
-  }, []);
+  // useEffect(() => {
+  //   fetch('https://yeachan.modie.site/test')
+  //     .then((res) => res.text())
+  //     .then((data) => setMessage(data))
+  // }, []);
 
   return (
-    <Wrapper>
-      마늘의 성 🧄🏰 <br />
-      CI/CD 테스트~ <br />
-      응답: {message}
-    </Wrapper>
+    <Router>
+      <Routes>
+        <Route element={<R.KioskMain />} path='/'/>
+      </Routes>
+    </Router>
   );
 }
 
