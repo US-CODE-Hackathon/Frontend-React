@@ -18,32 +18,19 @@ const ArchiveCard: React.FC<{
     }
   };
 
-  const getCardBgColor = (mood: T.MoodType): string => {
-    switch (mood) {
-      case 'positive':
-        return '#f0f5ff';
-      case 'neutral':
-        return '#f5faff';
-      case 'negative':
-        return '#f5faff';
-      default:
-        return '#f5faff';
-    }
-  };
-
   return (
     <S.NotificationCard
-      bgColor={getCardBgColor(data.mood)}
+      bgColor={data.hasRead ? '#f5faff' : '#F0F5FF'}
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
-      <S.PhotoThumbnail bgColor={data.thumbnailColor}>
+      <S.PhotoThumbnail color={data.thumbnailColor ?? '#cccccc'}>
         {!data.hasRead && <S.VoiceOverlay />}
       </S.PhotoThumbnail>
 
       <S.ContentSection>
         <S.MessageText>{data.message}</S.MessageText>
-        <S.TimeText>{data.timeAgo}</S.TimeText>
+        <S.TimeText>{data.time}</S.TimeText>
       </S.ContentSection>
 
       <S.MoodBadge moodType={data.mood}>

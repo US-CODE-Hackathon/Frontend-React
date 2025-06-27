@@ -17,6 +17,8 @@ import FamilyArchive from './family/archive/pages';
 import FamilyArchiveCard from './family/archive/components/ArchiveCard';
 import FamilyArchiveCardList from './family/archive/components/ArchiveCardList';
 import FamilyBottomNavigation from './family/common/components/BottomNavigation';
+import FamilyArchiveDetail from './family/archiveDetail/pages';
+import FamilyArchiveDetailData from './family/archiveDetail/components/ArchiveDetailData';
 
 export {
   KioskMain,
@@ -38,4 +40,6 @@ export {
   FamilyArchiveCard,
   FamilyArchiveCardList,
   FamilyBottomNavigation,
+  FamilyArchiveDetail,
+  FamilyArchiveDetailData,
 };
