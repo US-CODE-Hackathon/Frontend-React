@@ -1,5 +1,4 @@
 import * as S from './style';
-import * as C from '@/allFiles';
 import * as T from './type';
 
 const ArchiveCard: React.FC<{
