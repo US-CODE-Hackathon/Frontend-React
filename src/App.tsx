@@ -16,6 +16,7 @@ function App() {
 
         <Route path="/family">
           <Route element={<R.FamilyMain />} index />
+          <Route element={<R.FamilyArchive />} path="archive" />
         </Route>
       </Routes>
     </Router>
