@@ -258,6 +258,7 @@ export const BiographyCard = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const BiographyIcon = styled.div`

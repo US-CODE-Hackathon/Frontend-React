@@ -20,7 +20,9 @@ function App() {
         <Route path="/family">
           <Route element={<R.FamilyMain />} index />
           <Route element={<R.FamilyArchive />} path="archive" />
-          <Route element={<R.FamilyArchiveDetail />} path="/family/archive/:id" />
+          <Route element={<R.FamilyArchiveDetail />} path="archive/:id" />
+          <Route element={<R.FamilyAutobiography />} path="congrates" />
+          <Route element={<R.FamilyAutography />} path="autobiography/view" />
         </Route>
       </Routes>
     </Router>

@@ -6,8 +6,13 @@ interface BiographyProgress {
   isComplete: boolean;
 }
 
-const BiographySection = ({ progress }: { progress: BiographyProgress }) => (
-  <S.BiographyCard>
+interface BiographySectionProps {
+  progress: BiographyProgress;
+  onClick?: () => void;
+}
+
+const BiographySection = ({ progress, onClick }: BiographySectionProps) => (
+  <S.BiographyCard onClick={onClick}>
     <S.BiographyIcon />
     <S.BiographyInfo>
       <S.BiographyTitle>어르신의 자서전 만들기</S.BiographyTitle>
