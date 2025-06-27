@@ -30,44 +30,42 @@ const ArchiveDetailData: React.FC<DiaryDetailPageProps> = ({
   };
 
   return (
-    <S.MainContainer>
-      <S.Container>
-        <S.Header>
-          <S.BackButton onClick={handleBackClick}>← 뒤로</S.BackButton>
-          <S.DateText>{archiveData.date}</S.DateText>
-        </S.Header>
+    <S.Container>
+      <S.Header>
+        <S.BackButton onClick={handleBackClick}>← 뒤로</S.BackButton>
+        <S.DateText>{archiveData.date}</S.DateText>
+      </S.Header>
 
-        <S.MainContent>
-          <S.NotificationInfo>
-            <S.NotificationQuote>"{archiveData.message}"</S.NotificationQuote>
-            <S.NotificationDetails>{archiveData.time}</S.NotificationDetails>
-          </S.NotificationInfo>
-          {archiveData.photoUrl && (
-            <>
-              <S.PhotoContent>
-                <S.PhotoTitle>오늘의 사진</S.PhotoTitle>
-                <S.PhotoImage src={archiveData.photoUrl} onClick={handlePhotoClick} />
-                <S.PhotoHint>탭하여 원본 크기로 보기</S.PhotoHint>
+      <S.MainContent>
+        <S.NotificationInfo>
+          <S.NotificationQuote>"{archiveData.message}"</S.NotificationQuote>
+          <S.NotificationDetails>{archiveData.time}</S.NotificationDetails>
+        </S.NotificationInfo>
+        {archiveData.photoUrl && (
+          <>
+            <S.PhotoContent>
+              <S.PhotoTitle>오늘의 사진</S.PhotoTitle>
+              <S.PhotoImage src={archiveData.photoUrl} onClick={handlePhotoClick} />
+              <S.PhotoHint>탭하여 원본 크기로 보기</S.PhotoHint>
 
-                <S.MoodBadge color={archiveData.thumbnailColor ?? "#cccccc"}>
-                  <S.MoodBadgeText>
-                    {archiveData.mood === 'positive'
-                      ? '긍정적'
-                      : archiveData.mood === 'neutral'
-                        ? '보통'
-                        : '부정적'}
-                  </S.MoodBadgeText>
-                </S.MoodBadge>
-              </S.PhotoContent>
-            </>
-          )}
-          <S.AISummary>
-            <S.AISummaryTitle>AI의 요약</S.AISummaryTitle>
-            <S.AISummaryText>"{archiveData.summary}"</S.AISummaryText>
-          </S.AISummary>
-        </S.MainContent>
-      </S.Container>
-    </S.MainContainer>
+              <S.MoodBadge color={archiveData.thumbnailColor ?? '#cccccc'}>
+                <S.MoodBadgeText>
+                  {archiveData.mood === 'positive'
+                    ? '긍정적'
+                    : archiveData.mood === 'neutral'
+                      ? '보통'
+                      : '부정적'}
+                </S.MoodBadgeText>
+              </S.MoodBadge>
+            </S.PhotoContent>
+          </>
+        )}
+        <S.AISummary>
+          <S.AISummaryTitle>AI의 요약</S.AISummaryTitle>
+          <S.AISummaryText>"{archiveData.summary}"</S.AISummaryText>
+        </S.AISummary>
+      </S.MainContent>
+    </S.Container>
   );
 };
 

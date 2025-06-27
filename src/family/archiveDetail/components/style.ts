@@ -1,14 +1,5 @@
 import styled from 'styled-components';
 
-export const MainContainer = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow-y: auto;
-`;
-
 // 메인 컨테이너
 export const Container = styled.div`
   width: 375px;
@@ -18,7 +9,7 @@ export const Container = styled.div`
 `;
 
 // 헤더
-export const Header = styled.div`
+export const Header = styled.header`
   height: 3rem;
   padding-left: 16px;
   background: #ffffff;
@@ -47,8 +38,6 @@ export const BackButton = styled.button`
 
 export const DateText = styled.div`
   color: #1c1c1c;
-  font-family: Inter, sans-serif;
-  font-weight: 700;
   font-size: 18px;
   line-height: 1.21;
   position: absolute;
