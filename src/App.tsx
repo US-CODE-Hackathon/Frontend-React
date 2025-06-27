@@ -13,7 +13,9 @@ function App() {
     <Router>
       <Routes>
         <Route element={<R.KioskMain />} path="/" />
-
+        <Route element={<R.KioskOnGoing />} path="/ongoing" />
+        <Route element={<R.KioskCamera />} path="/camera" />
+        
         <Route path="/family">
           <Route element={<R.FamilyMain />} index />
           <Route element={<R.FamilyArchive />} path="archive" />

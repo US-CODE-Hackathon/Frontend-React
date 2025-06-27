@@ -1,5 +1,7 @@
 import KioskMain from './kiosk/pages/Main';
 import KioskSplash from './kiosk/pages/Splash';
+import KioskOnGoing from './kiosk/pages/OnGoing';
+import KioskCamera from './kiosk/pages/Camera';
 import KioskHeader from './kiosk/components/Header';
 import KioskButton from './kiosk/components/Button';
 
@@ -16,6 +18,8 @@ import FamilyBottomNavigation from './family/common/components/BottomNavigation'
 export {
   KioskMain,
   KioskSplash,
+  KioskOnGoing,
+  KioskCamera,
   KioskHeader,
   KioskButton,
   // Family components
