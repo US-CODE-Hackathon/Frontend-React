@@ -26,10 +26,10 @@ export const NotificationCard = styled.div<{ bgColor: string }>`
   }
 `;
 
-export const PhotoThumbnail = styled.div<{ bgColor: string }>`
+export const PhotoThumbnail = styled.div<{ color: string }>`
   width: 56px;
   height: 56px;
-  background-color: ${props => props.bgColor};
+  background-color: ${props => props.color};
   border-radius: 12px;
   margin: 8px;
   position: relative;

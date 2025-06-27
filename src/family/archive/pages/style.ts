@@ -24,13 +24,15 @@ export const PageContainer = styled.div`
 
 export const Header = styled.header`
   width: 100%;
-  height: 60px;
+  height: 3rem;
   background-color: #ffffff;
   border-bottom: 1px solid #f0f2f5;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  font-size: 18px;
+  color: #1c1c1c;
 `;
 
 export const BackButton = styled.button`
@@ -42,13 +44,6 @@ export const BackButton = styled.button`
   color: #384fff;
   cursor: pointer;
   font-weight: 500;
-`;
-
-export const HeaderTitle = styled.h1`
-  font-weight: 700;
-  font-size: 18px;
-  color: #1c1c1c;
-  margin: 0;
 `;
 
 export const MainContent = styled.main`
