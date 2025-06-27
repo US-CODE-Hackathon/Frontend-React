@@ -15,7 +15,8 @@ function App() {
         <Route element={<R.KioskMain />} path="/" />
         <Route element={<R.KioskOnGoing />} path="/ongoing" />
         <Route element={<R.KioskCamera />} path="/camera" />
-        
+        <Route element={<R.KioskForwarding />} path="/forwarding" />
+        <Route element={<R.ForwardingSuccess />} path="/forwarding/success" />
         <Route path="/family">
           <Route element={<R.FamilyMain />} index />
           <Route element={<R.FamilyArchive />} path="archive" />
