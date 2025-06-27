@@ -24,7 +24,7 @@ const ArchiveCard: React.FC<{
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
-      <S.PhotoThumbnail color={data.thumbnailColor}>
+      <S.PhotoThumbnail color={data.thumbnailColor ?? '#cccccc'}>
         {!data.hasRead && <S.VoiceOverlay />}
       </S.PhotoThumbnail>
 
