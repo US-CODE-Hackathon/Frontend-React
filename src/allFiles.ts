@@ -14,7 +14,9 @@ import FamilyArchiveCardList from './family/archive/components/ArchiveCardList';
 import FamilyBottomNavigation from './family/common/components/BottomNavigation';
 import FamilyArchiveDetail from './family/archiveDetail/pages';
 import FamilyArchiveDetailData from './family/archiveDetail/components/ArchiveDetailData';
-import FamilyAutobiography from './family/autobiography/pages';
+import FamilyAutobiography from './family/autobiography/congrates/pages';
+import FamilyAutographyData from './family/autobiography/read/components/AutobiographyData';
+import FamilyAutography from './family/autobiography/read/pages';
 
 export {
   KioskMain,
@@ -34,4 +36,6 @@ export {
   FamilyArchiveDetail,
   FamilyArchiveDetailData,
   FamilyAutobiography,
+  FamilyAutographyData,
+  FamilyAutography,
 };
