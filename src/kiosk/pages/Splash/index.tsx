@@ -6,6 +6,7 @@ import { useState, useEffect, type JSX } from 'react';
 import { MdKeyboardVoice } from 'react-icons/md';
 import { MainImg } from '@/kiosk/assets';
 import useSpeechToText from './useSpeechToText';
+import { useNavigate } from 'react-router-dom';
 
 const KioskSplash: React.FC = () => {
   const {
@@ -20,6 +21,8 @@ const KioskSplash: React.FC = () => {
   const [text, setText] = useState<'initial' | 'updated'>('initial');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [finalTranscript, setFinalTranscript] = useState<string>('');
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -62,6 +65,7 @@ const KioskSplash: React.FC = () => {
   const handleConfirm = (): void => {
     setShowModal(false);
     console.log('확인된 음성:', finalTranscript);
+    navigate("/ongoing")
   };
 
   const formatDuration = (duration: number): string => {
