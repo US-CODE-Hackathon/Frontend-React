@@ -1,6 +1,6 @@
-import * as R from './allFiles'
+import * as R from './allFiles';
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
   // useEffect(() => {
@@ -12,7 +12,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<R.KioskMain />} path='/'/>
+        <Route element={<R.KioskMain />} path="/" />
+
+        <Route path="/family">
+          <Route element={<R.FamilyMain />} index />
+        </Route>
       </Routes>
     </Router>
   );
