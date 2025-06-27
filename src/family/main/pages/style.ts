@@ -42,14 +42,6 @@ export const MainContent = styled.main`
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-
-  @media (max-width: 375px) {
-    padding-top: calc(2.75rem + 10px);
-  }
-
-  @media (max-height: 600px) {
-    padding-top: calc(2.5rem + 10px);
-  }
 `;
 
 export const SectionTitle = styled.h2`

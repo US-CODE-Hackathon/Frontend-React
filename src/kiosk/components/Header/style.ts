@@ -14,12 +14,4 @@ export const Header = styled.header`
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-
-  @media (max-width: 375px) {
-    height: 2.75rem;
-  }
-
-  @media (max-height: 600px) {
-    height: 2.5rem;
-  }
 `;
