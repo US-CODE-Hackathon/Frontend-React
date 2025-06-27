@@ -8,6 +8,10 @@ import AINotification from './family/main/components/AiNotification';
 import BiographySection from './family/main/components/BiographySection';
 import EmotionChart from './family/main/components/EmotionChart';
 import StatusSummary from './family/main/components/StatusSummary';
+import FamilyArchive from './family/archive/pages';
+import FamilyArchiveCard from './family/archive/components/ArchiveCard';
+import FamilyArchiveCardList from './family/archive/components/ArchiveCardList';
+import FamilyBottomNavigation from './family/common/components/BottomNavigation';
 
 export {
   KioskMain,
@@ -20,4 +24,8 @@ export {
   BiographySection,
   EmotionChart,
   StatusSummary,
+  FamilyArchive,
+  FamilyArchiveCard,
+  FamilyArchiveCardList,
+  FamilyBottomNavigation,
 };
