@@ -18,6 +18,7 @@ const useSpeechToText = (): SpeechToTextReturn => {
   const prevTranscriptRef = useRef<string>('');
 
   const clearAllTimers = () => {
+    console.log('clearAllTimers 호출됨');
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
       silenceTimerRef.current = null;
@@ -29,7 +30,7 @@ const useSpeechToText = (): SpeechToTextReturn => {
   };
 
   const startListening = () => {
-    console.log("듣기 시작")
+    console.log('startListening 호출됨 | 초기화: transcript, recordingDuration, prevTranscript');
     resetTranscript();
     setRecordingDuration(0);
     prevTranscriptRef.current = '';
@@ -37,11 +38,13 @@ const useSpeechToText = (): SpeechToTextReturn => {
   };
 
   const stopListening = () => {
+    console.log('stopListening 호출됨 | 현재 transcript:', transcript);
     SpeechRecognition.stopListening();
     clearAllTimers();
   };
 
   const resetRecording = () => {
+    console.log('resetRecording 호출됨');
     stopListening();
     resetTranscript();
     setRecordingDuration(0);
@@ -50,20 +53,25 @@ const useSpeechToText = (): SpeechToTextReturn => {
 
   // listening이 true가 되면 타이머 시작, false면 멈춤
   useEffect(() => {
-    console.log('듣기 시작', listening)
+    console.log('listening 상태 변경 | listening:', listening, '| duration:', recordingDuration);
     if (listening) {
-      
+      console.log('녹음 타이머 시작');
       durationTimerRef.current = setInterval(() => {
-        setRecordingDuration((prev) => prev + 1);
+        setRecordingDuration((prev) => {
+          console.log('녹음 시간 업데이트:', prev + 1);
+          return prev + 1;
+        });
       }, 1000);
     } else {
       if (durationTimerRef.current) {
+        console.log('녹음 타이머 정지');
         clearInterval(durationTimerRef.current);
         durationTimerRef.current = null;
       }
     }
     return () => {
       if (durationTimerRef.current) {
+        console.log('cleanup: 녹음 타이머 제거');
         clearInterval(durationTimerRef.current);
         durationTimerRef.current = null;
       }
@@ -74,11 +82,17 @@ const useSpeechToText = (): SpeechToTextReturn => {
   useEffect(() => {
     if (listening && transcript) {
       if (transcript !== prevTranscriptRef.current) {
+        console.log('transcript 변경됨 | 새로운 transcript:', transcript);
         prevTranscriptRef.current = transcript;
 
-        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+        if (silenceTimerRef.current) {
+          console.log('침묵 타이머 초기화');
+          clearTimeout(silenceTimerRef.current);
+        }
 
+        console.log('침묵 타이머 시작 | 3초 후 녹음 정지');
         silenceTimerRef.current = setTimeout(() => {
+          console.log('침묵 감지: 녹음 정지');
           stopListening();
         }, 3000);
       }
@@ -86,6 +100,7 @@ const useSpeechToText = (): SpeechToTextReturn => {
 
     return () => {
       if (silenceTimerRef.current) {
+        console.log('cleanup: 침묵 타이머 제거');
         clearTimeout(silenceTimerRef.current);
         silenceTimerRef.current = null;
       }
