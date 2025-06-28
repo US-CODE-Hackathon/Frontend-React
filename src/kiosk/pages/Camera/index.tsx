@@ -3,7 +3,6 @@ import * as S from './style';
 import * as C from '@/allFiles';
 import { useNavigate } from 'react-router-dom';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
-import { mainApi } from '@/__api__/axiosInstance';
 import { motion } from 'framer-motion';
 
 const Camera = () => {
