@@ -17,7 +17,7 @@ import { postQuestionAnswer } from '@/kiosk/services/Splash/postQuestionAnswer';
 import { useLocation } from 'react-router-dom';
 
 const KioskSplash: React.FC = () => {
-  const { recording, recordedBlob, duration, startRecording, stopRecording, resetRecording } =
+  const { recording, recordedBlob, startRecording, stopRecording, resetRecording } =
     useMediaRecorder();
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -138,6 +138,7 @@ const KioskSplash: React.FC = () => {
 
       audioConverter(recordedBlob)
         .then(resultText => {
+          console.log('음성 인식 결과:', resultText);
           setFinalTranscript(liveTranscript);
           setShowModal(true);
         })
