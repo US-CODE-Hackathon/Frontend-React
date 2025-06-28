@@ -29,6 +29,7 @@ const useSpeechToText = (): SpeechToTextReturn => {
   };
 
   const startListening = () => {
+    console.log("듣기 시작")
     resetTranscript();
     setRecordingDuration(0);
     prevTranscriptRef.current = '';
@@ -49,7 +50,9 @@ const useSpeechToText = (): SpeechToTextReturn => {
 
   // listening이 true가 되면 타이머 시작, false면 멈춤
   useEffect(() => {
+    console.log('듣기 시작', listening)
     if (listening) {
+      
       durationTimerRef.current = setInterval(() => {
         setRecordingDuration((prev) => prev + 1);
       }, 1000);
