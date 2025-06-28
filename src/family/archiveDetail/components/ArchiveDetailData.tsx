@@ -50,9 +50,9 @@ const ArchiveDetailData: React.FC<DiaryDetailPageProps> = ({
 
               <S.MoodBadge color={archiveData.thumbnailColor ?? '#cccccc'}>
                 <S.MoodBadgeText>
-                  {archiveData.mood === 'positive'
+                  {archiveData.emotion=== '긍정'
                     ? '긍정적'
-                    : archiveData.mood === 'neutral'
+                    : archiveData.emotion === '보통'
                       ? '보통'
                       : '부정적'}
                 </S.MoodBadgeText>

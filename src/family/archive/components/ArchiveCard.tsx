@@ -7,11 +7,11 @@ const ArchiveCard: React.FC<{
 }> = ({ data, onClick }) => {
   const getMoodText = (mood: T.MoodType): string => {
     switch (mood) {
-      case 'positive':
+      case '긍정':
         return '좋음';
-      case 'neutral':
+      case '보통':
         return '보통';
-      case 'negative':
+      case '부정':
         return '힘듦';
       default:
         return '보통';
@@ -33,8 +33,8 @@ const ArchiveCard: React.FC<{
         <S.TimeText>{data.time}</S.TimeText>
       </S.ContentSection>
 
-      <S.MoodBadge moodType={data.mood}>
-        <S.BadgeText>{getMoodText(data.mood)}</S.BadgeText>
+      <S.MoodBadge moodType={data.emotion}>
+        <S.BadgeText>{getMoodText(data.emotion)}</S.BadgeText>
       </S.MoodBadge>
     </S.NotificationCard>
   );

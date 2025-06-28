@@ -47,11 +47,11 @@ const ArchiveDetail: React.FC = () => {
             date: formattedDate,
             message: `"${emotionData.aiSummary}"`,
             title: emotionData.title, // 추가된 필드
-            mood: emotionData.emotion as 'positive' | 'neutral' | 'negative',
+            emotion: emotionData.emotion as '긍정' | '보통' | '부정',
             thumbnailColor:
-              emotionData.emotion === 'positive'
+              emotionData.emotion === '긍정'
                 ? 'rgba(51, 204, 102, 0.6)'
-                : emotionData.emotion === 'neutral'
+                : emotionData.emotion === '보통'
                 ? 'rgba(255, 172, 95, 0.6)'
                 : 'rgba(255, 92, 92, 0.6)',
             hasRead: !emotionData.first,
