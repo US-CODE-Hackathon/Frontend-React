@@ -1,9 +1,11 @@
+// ../components/type.ts
 export interface ArchiveData {
   id: string;
   date: string;
+  originalDate?: string;
   message: string;
   time?: string;
-  title?: string; 
+  title?: string;
   photoUrl?: string;
   hasRead?: boolean;
   emotion: '긍정' | '보통' | '부정';

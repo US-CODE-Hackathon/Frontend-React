@@ -23,6 +23,7 @@ import FamilyAutobiography from './family/autobiography/congrates/pages';
 import FamilyAutographyData from './family/autobiography/read/components/AutobiographyData';
 import FamilyAutography from './family/autobiography/read/pages';
 import FamilyBioGraphyToast from './family/main/components/BiographyToast';
+import RenderSkeleton from './family/archive/pages/Skeleton';
 
 import Loading from './kiosk/pages/Loading';
 
@@ -54,4 +55,5 @@ export {
   FamilyBioGraphyToast,
   // Loading component
   Loading,
+  RenderSkeleton,
 };
