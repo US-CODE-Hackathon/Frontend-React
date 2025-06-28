@@ -45,6 +45,10 @@ const KioskSplash: React.FC = () => {
   }, [questionData, conversationId]);
 
   useEffect(() => {
+    if (questionData || isSubmitting) return;
+
+    if (type === 'AUTOBIOGRAPHY' && !conversationId) return;
+
     setIsSubmitting(true);
     setError(null);
 
@@ -64,17 +68,17 @@ const KioskSplash: React.FC = () => {
     };
 
     fetchQuestion();
-  }, [conversationId]);
+  }, [conversationId, type, questionData, isSubmitting]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      startRecording();
-    }, 300);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     startRecording();
+  //   }, 300);
 
-    return () => {
-      clearTimeout(timer); // 컴포넌트 언마운트 시 클린업
-    };
-  }, []);
+  //   return () => {
+  //     clearTimeout(timer); // 컴포넌트 언마운트 시 클린업
+  //   };
+  // }, []);
 
   useEffect(() => {
     hasSpokenRef.current = false;
@@ -89,11 +93,18 @@ const KioskSplash: React.FC = () => {
       if (text === 'initial') {
         await TextToSpeech('박희진 어르신 반가워요', async () => {
           if (questionData.question) {
-            await TextToSpeech(questionData.question);
+            await TextToSpeech(questionData.question, () => {
+              // ✅ 여기서만 녹음 시작
+              console.log('🗣️ TTS 완료 → 🎙️ 녹음 시작');
+              startRecording();
+            });
           }
         });
       } else if (text === 'updated') {
-        await TextToSpeech(questionData.question);
+        await TextToSpeech(questionData.question, () => {
+          console.log('🗣️ TTS 완료 → 🎙️ 녹음 시작');
+          startRecording();
+        });
       }
     };
 
