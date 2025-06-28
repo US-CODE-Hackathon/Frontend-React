@@ -29,8 +29,8 @@ const ArchiveCard: React.FC<{
       </S.PhotoThumbnail>
 
       <S.ContentSection>
-        <S.MessageText>{data.message}</S.MessageText>
-        <S.TimeText>{data.time}</S.TimeText>
+        <S.MessageText>{data.title}</S.MessageText>
+        <S.TimeText>{data.date}</S.TimeText>
       </S.ContentSection>
 
       <S.MoodBadge moodType={data.emotion}>
