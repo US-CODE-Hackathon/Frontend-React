@@ -2,28 +2,39 @@ import * as C from '@/allFiles';
 import * as S from './style';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, type JSX } from 'react';
+import { useRef, useState, useEffect, type JSX } from 'react';
 import { MdKeyboardVoice } from 'react-icons/md';
 import { MainImg } from '@/kiosk/assets';
-import useSpeechToText from './useSpeechToText';
+import useMediaRecorder from './useMediaRecorder';
 import { useNavigate } from 'react-router-dom';
+import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
+import { speechToText } from '@/kiosk/common/services/speechToText';
+import { audioConverter } from '@/kiosk/common/utils/audioConverter';
 
 const KioskSplash: React.FC = () => {
-  const {
-    transcript,
-    listening,
-    recordingDuration,
-    startListening,
-    stopListening,
-    resetRecording,
-  } = useSpeechToText();
+  const { recording, recordedBlob, duration, startRecording, stopRecording, resetRecording } =
+    useMediaRecorder();
 
   const [text, setText] = useState<'initial' | 'updated'>('initial');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [finalTranscript, setFinalTranscript] = useState<string>('');
+  const hasProcessedRef = useRef(false);
+  const [liveTranscript, setLiveTranscript] = useState('');
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    startRecording(); // 페이지 접속 시 자동 시작
+  }, []);
+
+  // 초기 음성 안내
+  useEffect(() => {
+    if (text === 'initial') {
+      TextToSpeech('박희진 어르신, 반갑습니다');
+    }
+  }, [text]);
+
+  // 초기 텍스트 변경 타이머
   useEffect(() => {
     console.log('초기 텍스트 타이머 설정 | text:', text);
     const timer = setTimeout(() => {
@@ -37,51 +48,81 @@ const KioskSplash: React.FC = () => {
     };
   }, []);
 
+  // 실시간 음성 인식 시작
   useEffect(() => {
-    if (text === 'updated') {
-      console.log('text가 updated로 변경됨 | listening:', listening, '| showModal:', showModal);
-      const autoStartTimer = setTimeout(() => {
-        if (!listening && !showModal) {
-          console.log('자동 녹음 시작');
-          startListening();
-        } else {
-          console.log('자동 녹음 시작 조건 미충족 | listening:', listening, '| showModal:', showModal);
-        }
-      }, 1000);
+    if (!('webkitSpeechRecognition' in window)) return;
 
-      return () => {
-        console.log('cleanup: 자동 녹음 타이머 제거');
-        clearTimeout(autoStartTimer);
-      };
-    }
-  }, [text, listening, showModal]);
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'ko-KR';
 
-  // 모달 표시 조건: 녹음 종료 + 텍스트 존재 + 모달 안 켜짐
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      setLiveTranscript(transcript);
+    };
+
+    if (recording) recognition.start();
+    else recognition.stop();
+
+    return () => recognition.stop();
+  }, [recording]);
+
+  // 자동 녹음 시작
   useEffect(() => {
-    console.log('모달 상태 점검 | listening:', listening, '| transcript:', transcript, '| showModal:', showModal);
-    if (!listening && transcript && !showModal) {
-      console.log('모달 표시 조건 충족 | finalTranscript 설정:', transcript);
-      setFinalTranscript(transcript);
-      setShowModal(true);
-      stopListening(); // 명시적 정지
+    if (!recording && recordedBlob && !showModal && !hasProcessedRef.current) {
+      console.log('📦 녹음 완료 → 서버로 전송 준비');
+      hasProcessedRef.current = true;
+
+      audioConverter(recordedBlob)
+        .then(resultText => {
+          setFinalTranscript(liveTranscript);
+          setShowModal(true);
+        })
+        .catch(err => {
+          console.error('❌ STT 실패:', err);
+          setFinalTranscript('인식 실패');
+          setShowModal(true);
+        });
     }
-  }, [listening, transcript, showModal]);
+  }, [recording, recordedBlob, showModal]);
 
   const handleRetry = (): void => {
+    setLiveTranscript('');
     console.log('handleRetry 호출됨 | 모달 닫고 녹음 재시작');
     setShowModal(false);
+    hasProcessedRef.current = false;
     resetRecording();
     setFinalTranscript('');
     setTimeout(() => {
-      console.log('0.5초 후 녹음 재시작');
-      startListening();
-    }, 500);
+      console.log('0.3초 후 녹음 재시작');
+      startRecording();
+    }, 300);
   };
 
   const handleConfirm = (): void => {
-    console.log('handleConfirm 호출됨 | 확인된 음성:', finalTranscript);
+    if (!recordedBlob) return;
+
+    console.log('handleConfirm 호출됨 | 확인된 음성:', liveTranscript);
     setShowModal(false);
-    navigate('/ongoing');
+    setLiveTranscript('');
+
+    audioConverter(recordedBlob)
+      .then(wavBlob => {
+        const wavFile = new File([wavBlob], 'voice.wav', { type: 'audio/wav' });
+        return speechToText(wavFile); // /stt 전송
+      })
+      .then(resultText => {
+        setFinalTranscript(resultText);
+        navigate('/ongoing', { state: { userResponse: resultText } });
+      })
+      .catch(err => {
+        console.error('❌ STT 실패:', err);
+        setFinalTranscript('인식 실패');
+      });
   };
 
   const formatDuration = (duration: number): string => {
@@ -94,32 +135,57 @@ const KioskSplash: React.FC = () => {
     if (text === 'initial') {
       return (
         <>
-          <span>박희진</span> 어르신 <br /> 반갑습니다
+          <span>박희진 어르신, 반갑습니다 </span>
         </>
       );
     }
+
     return (
       <>
         <span>희진 할머니,</span> <br /> 오늘 기분은 어떠세요? <br />
         <S.VoiceWrapper>
-          <button onClick={() => {
-            console.log('음성 녹음 버튼 클릭');
-            startListening();
-          }}>
+          <S.GuideText>
+            👇 이 버튼을 누르면 <strong>녹음이 끝나요!</strong>
+          </S.GuideText>
+          <button
+            onClick={() => {
+              console.log('🎙 버튼 클릭 → 녹음 종료 시도');
+              stopRecording();
+            }}
+            disabled={!recording}
+          >
             <MdKeyboardVoice />
           </button>
         </S.VoiceWrapper>
-        {listening && (
+        {recording && (
           <S.RecordWrapper>
-            목소리가 녹음되고 있어요 <br /> <span>{formatDuration(recordingDuration)}</span>
+            목소리가 녹음되고 있어요 <br />
+            {/* <span>{formatDuration(duration)}</span> */}
+            <br />
+            {recording && (
+              <div
+                style={{
+                  marginTop: '10px',
+                  fontSize: '0.9em',
+                  color: '#333',
+                  background: '#f0f0f0',
+                  padding: '8px',
+                  borderRadius: '8px',
+                  maxWidth: '300px',
+                  wordBreak: 'keep-all',
+                }}
+              >
+                실시간: "{liveTranscript}"
+              </div>
+            )}
           </S.RecordWrapper>
         )}
         {showModal && (
           <S.ModalOverlay>
             <S.ModalContent>
               <h2>말씀하신 내용이 맞나요?</h2>
-              <h3>녹음된 내용을 확인해주세요</h3>
-              <div className="transcript">{finalTranscript || '녹음된 내용이 없습니다.'}</div>
+              <h3>인식된 내용을 확인해주세요</h3>
+              <div className="transcript">{finalTranscript || '인식된 내용이 없습니다.'}</div>
               <S.BtnGroup>
                 <C.KioskButton onClick={handleConfirm}>맞아요</C.KioskButton>
                 <motion.button
@@ -132,7 +198,9 @@ const KioskSplash: React.FC = () => {
                   다시 말하기
                 </motion.button>
               </S.BtnGroup>
-              <p>💡 내용이 틀렸다면 <span>"다시 말하기"</span>를 눌러주세요</p>
+              <p>
+                💡 내용이 틀렸다면 <span>"다시 말하기"</span>를 눌러주세요
+              </p>
             </S.ModalContent>
           </S.ModalOverlay>
         )}

@@ -42,6 +42,7 @@ export const VoiceWrapper = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 2rem;
+  flex-direction: column;
 
   & > button {
     width: 96px;
@@ -51,11 +52,24 @@ export const VoiceWrapper = styled.div`
     background-color: #f0f5ff;
     color: #384fff;
     font-size: 35px;
-    text-align: center; 
+    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+`;
+
+export const GuideText = styled.p`
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #333;
+  text-align: center;
+  background-color: #fff8dc;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #f0e68c;
+  font-weight: 500;
+  line-height: 1.4;
 `;
 
 export const ModalOverlay = styled.div`
@@ -91,8 +105,8 @@ export const ModalContent = styled.div`
 
   p {
     font-size: 14px;
-    background-color: #E0F0FA;
-    color: #99804D;
+    background-color: #e0f0fa;
+    color: #99804d;
     padding: 10px;
     border-radius: 8px;
 
@@ -105,7 +119,7 @@ export const ModalContent = styled.div`
     width: 279px;
     margin-bottom: 20px;
     word-wrap: break-word;
-    background-color: #F5F7FA;
+    background-color: #f5f7fa;
     border-radius: 12px;
     font-size: 24px;
     padding: 20px;
@@ -123,14 +137,14 @@ export const ModalContent = styled.div`
     width: 100%;
     border-radius: 8px;
     background-color: #fff;
-    border: 2px solid #D4D4D4;
+    border: 2px solid #d4d4d4;
     color: #000;
-    transition: background-color 0.15s ease-in ;
+    transition: background-color 0.15s ease-in;
 
     &:hover {
-      background-color:rgb(238, 235, 235);
-      }
+      background-color: rgb(238, 235, 235);
     }
+  }
 `;
 
 export const BtnGroup = styled.div`
@@ -138,7 +152,7 @@ export const BtnGroup = styled.div`
   align-items: center;
   justify-content: center;
   gap: 15px;
-`
+`;
 
 export const RecordWrapper = styled.div`
   font-size: 16px;
@@ -149,4 +163,4 @@ export const RecordWrapper = styled.div`
     font-size: 24px;
     columns: #171717;
   }
-`
+`;
