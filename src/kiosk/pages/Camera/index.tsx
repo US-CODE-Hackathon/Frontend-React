@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import * as S from './style';
 import * as C from '@/allFiles';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
+import { motion } from 'framer-motion';
 
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -12,6 +12,7 @@ const Camera = () => {
   const [isCaptured, setIsCaptured] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const navigate = useNavigate();
+
   // 카메라 접근
   useEffect(() => {
     const startCamera = async () => {
@@ -46,7 +47,6 @@ const Camera = () => {
 
   const handleCapture = () => {
     if (!videoRef.current || !canvasRef.current) return;
-
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
@@ -58,6 +58,7 @@ const Camera = () => {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       const imageData = canvas.toDataURL('image/png');
       setCapturedImage(imageData);
+      sessionStorage.setItem('capturedImage', imageData); // ✅ 세션 저장
       setIsCaptured(true);
     }
   };
@@ -69,9 +70,7 @@ const Camera = () => {
   };
 
   const handleSend = () => {
-    console.log('보내는 이미지:', capturedImage);
     navigate('/forwarding');
-    // TODO: 가족에게 보내는 API or 다음 라우팅 처리
   };
 
   return (
