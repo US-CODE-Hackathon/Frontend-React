@@ -33,6 +33,7 @@ const KioskSplash: React.FC = () => {
   const [text, setText] = useState<'initial' | 'updated'>(() =>
     type === 'AUTOBIOGRAPHY' ? 'updated' : 'initial',
   );
+  const hasSpokenRef = useRef(false);
 
   const navigate = useNavigate();
 
@@ -69,15 +70,27 @@ const KioskSplash: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (text === 'initial') {
-      TextToSpeech('박희진 어르신, 반갑습니다', () => {
-        if (questionData?.question) {
-          TextToSpeech(questionData.question);
-        }
-      });
-    } else if (text === 'updated' && questionData) {
-      TextToSpeech(questionData.question);
-    }
+    hasSpokenRef.current = false;
+  }, [questionData?.questionId]);
+
+  useEffect(() => {
+    if (!questionData || hasSpokenRef.current) return;
+
+    const speakOnce = async () => {
+      hasSpokenRef.current = true;
+
+      if (text === 'initial') {
+        await TextToSpeech('박희진 어르신, 반갑습니다', async () => {
+          if (questionData.question) {
+            await TextToSpeech(questionData.question);
+          }
+        });
+      } else if (text === 'updated') {
+        await TextToSpeech(questionData.question);
+      }
+    };
+
+    speakOnce();
   }, [text, questionData]);
 
   // 초기 텍스트 변경 타이머
@@ -185,6 +198,7 @@ const KioskSplash: React.FC = () => {
         console.error('❌ 전송 실패:', err);
         setFinalTranscript('전송 실패');
         setIsSubmitting(false); // 실패 시 다시 false
+        navigate('/ongoing', { state: { userResponse: resultText } });
       })
       .finally(() => {
         setIsSubmitting(false);
