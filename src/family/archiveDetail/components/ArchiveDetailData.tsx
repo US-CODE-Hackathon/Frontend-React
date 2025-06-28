@@ -38,7 +38,7 @@ const ArchiveDetailData: React.FC<DiaryDetailPageProps> = ({
 
       <S.MainContent>
         <S.NotificationInfo>
-          <S.NotificationQuote>"{archiveData.message}"</S.NotificationQuote>
+          <S.NotificationQuote>{archiveData.title}</S.NotificationQuote>
           <S.NotificationDetails>{archiveData.time}</S.NotificationDetails>
         </S.NotificationInfo>
         {archiveData.photoUrl && (

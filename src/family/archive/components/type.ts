@@ -2,7 +2,8 @@ export interface ArchiveData {
   id: string;
   date: string;
   message: string;
-  time: string;
+  time?: string;
+  title?: string; 
   photoUrl?: string;
   hasRead?: boolean;
   mood: 'positive' | 'neutral' | 'negative';
