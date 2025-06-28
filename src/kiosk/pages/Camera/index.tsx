@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import * as S from './style';
 import * as C from '@/allFiles';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
 import { mainApi } from '@/__api__/axiosInstance';
+import { motion } from 'framer-motion';
 
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -13,6 +13,7 @@ const Camera = () => {
   const [isCaptured, setIsCaptured] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const navigate = useNavigate();
+
   // 카메라 접근
   useEffect(() => {
     const startCamera = async () => {
@@ -47,7 +48,6 @@ const Camera = () => {
 
   const handleCapture = () => {
     if (!videoRef.current || !canvasRef.current) return;
-
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
@@ -59,6 +59,7 @@ const Camera = () => {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       const imageData = canvas.toDataURL('image/png');
       setCapturedImage(imageData);
+      sessionStorage.setItem('capturedImage', imageData); // ✅ 세션 저장
       setIsCaptured(true);
     }
   };
@@ -69,44 +70,8 @@ const Camera = () => {
     window.location.reload();
   };
 
-  const handleSend = async () => {
-    if (!capturedImage) {
-      console.error('전송할 이미지가 없습니다.');
-      alert('전송할 이미지가 없습니다.');
-      return;
-    }
-
-    try {
-      // Base64 문자열에서 'data:image/png;base64,' 접두사 제거
-      const base64String = capturedImage.split(',')[1];
-      // Base64를 Blob으로 변환
-      const byteCharacters = atob(base64String);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'image/png' });
-
-      // FormData로 파일 전송
-      const formData = new FormData();
-      formData.append('conversationId', '1'); // conversationId 추가
-      formData.append('file', blob, 'photo.png'); // file 필드에 Blob 추가
-
-      const response = await mainApi.post('/photo', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // axios는 FormData 사용 시 자동 설정되지만 명시
-        },
-      });
-
-      console.log('이미지 업로드 성공:', response.data);
-      TextToSpeech('사진이 성공적으로 전송되었습니다.');
-      navigate('/forwarding');
-    } catch (error: any) {
-      console.error('이미지 업로드 실패:', error);
-      TextToSpeech('사진 전송에 실패했습니다. 다시 시도해주세요.');
-      alert(`이미지 업로드에 실패했습니다: ${error.message}`);
-    }
+  const handleSend = () => {
+    navigate('/forwarding');
   };
 
   return (
