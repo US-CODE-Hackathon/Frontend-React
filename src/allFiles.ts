@@ -2,7 +2,7 @@ import KioskMain from './kiosk/pages/Main';
 import KioskSplash from './kiosk/pages/Splash';
 import KioskOnGoing from './kiosk/pages/OnGoing';
 import KioskCamera from './kiosk/pages/Camera';
-import KioskForwarding from './kiosk/pages/Forwarding'
+import KioskForwarding from './kiosk/pages/Forwarding';
 import KioskHeader from './kiosk/components/Header';
 import KioskButton from './kiosk/components/Button';
 import ProgressBar from './kiosk/components/Progressbar';
@@ -22,6 +22,7 @@ import FamilyArchiveDetailData from './family/archiveDetail/components/ArchiveDe
 import FamilyAutobiography from './family/autobiography/congrates/pages';
 import FamilyAutographyData from './family/autobiography/read/components/AutobiographyData';
 import FamilyAutography from './family/autobiography/read/pages';
+import FamilyBioGraphyToast from './family/main/components/BiographyToast';
 
 export {
   KioskMain,
@@ -48,4 +49,5 @@ export {
   FamilyAutobiography,
   FamilyAutographyData,
   FamilyAutography,
+  FamilyBioGraphyToast,
 };

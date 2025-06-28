@@ -3,9 +3,41 @@ import * as C from '@/allFiles';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FamilyMain = () => {
   const navigate = useNavigate();
+  const [hasShownToast, setHasShownToast] = useState(false);
+  const biographyProgress = { current: 10, total: 10, isComplete: true };
+
+  useEffect(() => {
+    if (biographyProgress.current === biographyProgress.total && !hasShownToast) {
+      toast(
+        <C.FamilyBioGraphyToast
+          total={biographyProgress.total}
+          onClick={() => {
+            navigate('/family/congrates');
+            toast.dismiss();
+          }}
+        />,
+        {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          style: {
+            backgroundColor: '#2ee0c5',
+            borderRadius: '12px',
+          },
+        },
+      );
+      setHasShownToast(true);
+    }
+  }, [biographyProgress, hasShownToast, navigate]);
 
   const handleBiographySectionClick = () => {
     navigate(`/family/congrates`);
@@ -14,8 +46,6 @@ const FamilyMain = () => {
   const [activeTab, setActiveTab] = useState<'weekly' | 'monthly'>('weekly');
 
   const notifications = [{ id: '1', message: '3일 연속 피로감 호소 • 1시간 전' }];
-
-  const biographyProgress = { current: 10, total: 10, isComplete: true };
 
   return (
     <S.MainContainer>
@@ -42,6 +72,7 @@ const FamilyMain = () => {
 
         <C.FamilyBottomNavigation />
       </S.AppContainer>
+      <ToastContainer />
     </S.MainContainer>
   );
 };
