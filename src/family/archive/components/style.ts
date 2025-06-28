@@ -96,11 +96,11 @@ export const MoodBadge = styled.div<{ moodType: T.MoodType }>`
   border-radius: 10px;
   background-color: ${props => {
     switch (props.moodType) {
-      case 'positive':
+      case '긍정':
         return '#33cc66';
-      case 'neutral':
+      case '보통':
         return '#ffac5f';
-      case 'negative':
+      case '부정':
         return '#ff5c5c';
       default:
         return '#666666';

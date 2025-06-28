@@ -4,9 +4,12 @@ import * as S from './style';
 import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { MainImg } from '@/kiosk/assets';
+import { useLocation } from 'react-router-dom';
 
 const Main = () => {
-  const [showSplash, setShowSplash] = useState(false);
+  const location = useLocation();
+  const type = location.state?.type;
+  const [showSplash, setShowSplash] = useState(() => type === 'AUTOBIOGRAPHY');
 
   const handleStart = () => {
     setShowSplash(true);

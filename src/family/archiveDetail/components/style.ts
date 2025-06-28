@@ -6,6 +6,7 @@ export const Container = styled.div`
   min-height: 100vh;
   background: #ffffff;
   overflow: hidden;
+  margin-top: 8rem;
 `;
 
 // 헤더
