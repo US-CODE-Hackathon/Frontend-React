@@ -4,7 +4,7 @@ import * as S from './style';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect, type JSX } from 'react';
 import { MdKeyboardVoice } from 'react-icons/md';
-import { MainImg, MainGif } from '@/kiosk/assets';
+import { MainGif } from '@/kiosk/assets';
 import useMediaRecorder from './useMediaRecorder';
 import { useNavigate } from 'react-router-dom';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
