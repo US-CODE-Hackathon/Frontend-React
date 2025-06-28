@@ -1,23 +1,20 @@
 import * as S from './style';
 import { useEffect, useState } from 'react';
 import { HeartSvg } from '@/family/main/assets';
-import { getWeeklyReport, type MoodData } from '../services/getWeeklyReport';
+import { getWeeklyReport } from '../services/getWeeklyReport';
 
 const StatusSummary = () => {
   const [averagePositive, setAveragePositive] = useState<number | null>(null);
-  const [summary, setSummary] = useState<string>('');
 
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const { moodData, aiAnalysisResponse } = await getWeeklyReport();
+        const { moodData } = await getWeeklyReport();
 
         // 평균 긍정도 계산
         const total = moodData.reduce((acc, cur) => acc + cur.positive, 0);
         const average = total / moodData.length;
         setAveragePositive(Math.round(average)); // 소수점 반올림
-
-        setSummary(aiAnalysisResponse.pattern_summary);
       } catch (error) {
         console.error('감정 요약 데이터 불러오기 실패:', error);
       }

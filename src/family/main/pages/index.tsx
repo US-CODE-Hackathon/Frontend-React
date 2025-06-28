@@ -45,8 +45,6 @@ const FamilyMain = () => {
 
   const [activeTab, setActiveTab] = useState<'weekly' | 'monthly'>('weekly');
 
-  const notifications = [{ id: '1', message: '3일 연속 피로감 호소 • 1시간 전' }];
-
   return (
     <S.MainContainer>
       <S.AppContainer>
@@ -69,7 +67,7 @@ const FamilyMain = () => {
 
           <C.StatusSummary />
           <C.EmotionChart />
-          <C.AINotification notifications={notifications} />
+          <C.AINotification />
           <C.BiographySection progress={biographyProgress} onClick={handleBiographySectionClick} />
         </S.MainContent>
 
