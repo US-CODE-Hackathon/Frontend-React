@@ -36,11 +36,11 @@ const Forwarding = () => {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
-        TextToSpeech('사진이 성공적으로 전송되었습니다.');
+        // TextToSpeech('사진이 성공적으로 전송되었습니다.');
       } catch (err) {
         console.error('전송 실패:', err);
-        TextToSpeech('사진 전송에 실패했습니다.');
-        alert('전송 실패');
+        // TextToSpeech('사진 전송에 실패했습니다.');
+        // alert('전송 실패');
       }
     };
 
