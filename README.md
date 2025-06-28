@@ -1,7 +1,10 @@
-# 정마루
+<div align="center">
+<img src="https://github.com/user-attachments/assets/0f338b43-e83f-4eb0-bdff-0de80c97c9ec" width="100"/>
 
+# 情마루
 > AI 기반 정서 분석과 비동기 음성 소통을 통해  
 > **고령층의 감정 표현과 디지털 자립을 지원하는 키오스크 서비스**입니다.
+</div>
 
 ## Frontend Tech Stack
 
