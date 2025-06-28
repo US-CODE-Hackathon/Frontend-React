@@ -3,10 +3,9 @@ import styled from 'styled-components';
 // 메인 컨테이너
 export const Container = styled.div`
   width: 375px;
-  min-height: 100vh;
+  height: 100%;
   background: #ffffff;
   overflow: hidden;
-  margin-top: 8rem;
 `;
 
 // 헤더
@@ -48,7 +47,7 @@ export const DateText = styled.div`
 
 // 메인 콘텐츠
 export const MainContent = styled.div`
-  height: 680px;
+  height: 100%;
   background: #ffffff;
   padding: 16px;
   display: flex;
@@ -63,8 +62,9 @@ export const NotificationInfo = styled.div`
   border-radius: 16px;
   padding: 16px;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: baseline;
+  flex-direction: row;
+  gap: 16px;
 `;
 
 export const NotificationQuote = styled.div`

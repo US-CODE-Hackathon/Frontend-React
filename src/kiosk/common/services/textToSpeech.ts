@@ -1,11 +1,11 @@
-import { fastAPI } from '@/__api__/axiosInstance';
+import { mainApi } from '@/__api__/axiosInstance';
 
 export const TextToSpeech = async (text: string, onEnd?: () => void) => {
   try {
     const formData = new FormData();
     formData.append('text', text); // form-data의 'text' key로 텍스트 추가
 
-    const response = await fastAPI.post('/tts', formData, {
+    const response = await mainApi.post('/tts', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
