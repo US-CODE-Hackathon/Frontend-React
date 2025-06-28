@@ -1,4 +1,4 @@
-import { mainApi } from '@/__api__/axiosInstance';
+import { mainApi } from '@/api/axiosInstance';
 
 interface PostAnswerRequest {
   conversationId: number;

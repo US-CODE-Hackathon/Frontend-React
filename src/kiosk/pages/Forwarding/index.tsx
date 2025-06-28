@@ -4,7 +4,7 @@ import * as S from './style';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mainApi } from '@/__api__/axiosInstance';
+import { mainApi } from '@/api/axiosInstance';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
 import { useConversationStore } from '@/kiosk/stores/useConversationStore';
 

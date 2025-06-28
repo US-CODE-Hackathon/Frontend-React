@@ -1,4 +1,4 @@
-import { mainApi } from '@/__api__/axiosInstance';
+import { mainApi } from '@/api/axiosInstance';
 
 export interface QuestionResponse {
   conversationId: number;
