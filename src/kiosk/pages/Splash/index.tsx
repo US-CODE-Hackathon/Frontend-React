@@ -4,7 +4,7 @@ import * as S from './style';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect, type JSX } from 'react';
 import { MdKeyboardVoice } from 'react-icons/md';
-import { MainImg } from '@/kiosk/assets';
+import { MainImg, MainGif } from '@/kiosk/assets';
 import useMediaRecorder from './useMediaRecorder';
 import { useNavigate } from 'react-router-dom';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
@@ -332,7 +332,7 @@ const KioskSplash: React.FC = () => {
         <C.KioskHeader />
         <S.SplashImgWrapper>
           <motion.img
-            src={MainImg}
+            src={MainGif}
             alt="메인 이미지"
             initial={{ y: 100, scale: 1, opacity: 1 }}
             animate={{ y: 0, scale: 0.8, opacity: 1 }}
