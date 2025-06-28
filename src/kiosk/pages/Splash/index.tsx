@@ -80,7 +80,7 @@ const KioskSplash: React.FC = () => {
       hasSpokenRef.current = true;
 
       if (text === 'initial') {
-        await TextToSpeech('박희진 어르신, 반갑습니다', async () => {
+        await TextToSpeech('박희진 어르신 반가워요', async () => {
           if (questionData.question) {
             await TextToSpeech(questionData.question);
           }
@@ -198,17 +198,11 @@ const KioskSplash: React.FC = () => {
         console.error('❌ 전송 실패:', err);
         setFinalTranscript('전송 실패');
         setIsSubmitting(false); // 실패 시 다시 false
-        navigate('/ongoing', { state: { userResponse: resultText } });
       })
       .finally(() => {
         setIsSubmitting(false);
+        navigate('/ongoing');
       });
-  };
-
-  const formatDuration = (duration: number): string => {
-    const minutes = Math.floor(duration / 60);
-    const seconds = duration % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
   const renderVoiceUI = () => (
@@ -292,7 +286,7 @@ const KioskSplash: React.FC = () => {
     if (text === 'initial') {
       return (
         <>
-          <span>박희진 어르신, 반갑습니다 </span>
+          <span>박희진 어르신, 반가워요 👋🏻 </span>
         </>
       );
     }
