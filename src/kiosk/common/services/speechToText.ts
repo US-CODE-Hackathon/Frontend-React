@@ -1,11 +1,11 @@
-import { fastAPI } from '@/__api__/axiosInstance';
+import { mainApi } from '@/__api__/axiosInstance';
 
 export const speechToText = async (file: File): Promise<string> => {
   const formData = new FormData();
   formData.append('file', file);
 
   try {
-    const response = await fastAPI.post('/stt', formData, {
+    const response = await mainApi.post('/stt', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

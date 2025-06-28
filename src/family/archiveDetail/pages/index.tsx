@@ -14,6 +14,7 @@ interface Emotion {
   date: string;
   first: boolean;
   title?: string; // 추가된 필드
+  time?: string;
 }
 
 interface ApiResponse {
@@ -38,6 +39,7 @@ const ArchiveDetail: React.FC = () => {
         console.log('API Response:', response.data);
         if (response.data.success && response.data.response) {
           const emotionData = response.data.response;
+
           // date를 한국어 형식으로 변환 (예: "2025-06-27" -> "2025년 6월 27일")
           const [year, month, day] = emotionData.date.split('-');
           const formattedDate = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
@@ -45,6 +47,7 @@ const ArchiveDetail: React.FC = () => {
           const formattedData: ArchiveData = {
             id: emotionData.emotionalReportId.toString(),
             date: formattedDate,
+            time: emotionData.time,
             message: `"${emotionData.aiSummary}"`,
             title: emotionData.title, // 추가된 필드
             emotion: emotionData.emotion as '긍정' | '보통' | '부정',
@@ -52,8 +55,8 @@ const ArchiveDetail: React.FC = () => {
               emotionData.emotion === '긍정'
                 ? 'rgba(51, 204, 102, 0.6)'
                 : emotionData.emotion === '보통'
-                ? 'rgba(255, 172, 95, 0.6)'
-                : 'rgba(255, 92, 92, 0.6)',
+                  ? 'rgba(255, 172, 95, 0.6)'
+                  : 'rgba(255, 92, 92, 0.6)',
             hasRead: !emotionData.first,
             summary: emotionData.aiSummary,
             photoUrl: emotionData.imageUrl || undefined,

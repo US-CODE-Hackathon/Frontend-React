@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ForwardingContainer = styled.div`
   width: 100%;
@@ -25,8 +25,9 @@ export const ForwardingImgWrapper = styled.div`
   text-align: center;
 
   & h1 {
+    position: relative;
     font-size: 24px;
-    margin-top: 30px; 
+    margin-top: 30px;
     font-weight: 500;
     margin-bottom: 3rem;
   }
@@ -60,7 +61,7 @@ export const ForwardingSuccess = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 3rem;
-`
+`;
 
 export const BtnGroup = styled.div`
   display: flex;
@@ -79,16 +80,16 @@ export const BtnGroup = styled.div`
     width: 100%;
     border-radius: 8px;
     background-color: #fff;
-    border: 2px solid #D4D4D4;
+    border: 2px solid #d4d4d4;
     color: #000;
-    transition: background-color 0.15s ease-in ;
+    transition: background-color 0.15s ease-in;
 
     &:hover {
-      background-color:rgb(238, 235, 235);
-      }
+      background-color: rgb(238, 235, 235);
+    }
   }
-`
+`;
 
 export const ProgressBarWrapper = styled.div`
   margin-top: 3rem;
-`
+`;
