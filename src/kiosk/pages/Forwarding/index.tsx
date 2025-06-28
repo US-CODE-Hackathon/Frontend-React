@@ -6,10 +6,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mainApi } from '@/__api__/axiosInstance';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
+import { useConversationStore } from '@/kiosk/stores/useConversationStore';
 
 const Forwarding = () => {
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
+  const { conversationId } = useConversationStore();
 
   useEffect(() => {
     const sendImage = async () => {
@@ -27,7 +29,7 @@ const Forwarding = () => {
         const blob = new Blob([byteArray], { type: 'image/png' });
 
         const formData = new FormData();
-        formData.append('conversationId', '1');
+        formData.append('conversationId', conversationId !== null ? String(conversationId) : '');
         formData.append('file', blob, 'photo.png');
 
         await mainApi.post('/photo', formData, {

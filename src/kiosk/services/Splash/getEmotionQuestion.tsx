@@ -7,7 +7,7 @@ export interface QuestionResponse {
   question: string;
 }
 
-export const getEmotionQuestion = async (conversationId: number) => {
-  const res = await mainApi.get(`/question/emotion/${conversationId}`);
+export const getEmotionQuestion = async () => {
+  const res = await mainApi.get(`/question/emotion`);
   return res.data.response;
 };
