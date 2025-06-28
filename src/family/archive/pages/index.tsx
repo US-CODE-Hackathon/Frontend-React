@@ -1,11 +1,11 @@
 import * as S from './style';
 import * as C from '@/allFiles';
 import * as T from '../components/type';
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mainApi } from '@/api/axiosInstance';
 
-// API 응답 타입 정의
 interface Emotion {
   emotionalReportId: number;
   imageUrl: string;
@@ -13,7 +13,7 @@ interface Emotion {
   aiSummary: string;
   date: string;
   first: boolean;
-  title?: string; // 추가된 필드
+  title?: string;
 }
 
 interface ApiResponse {
@@ -32,39 +32,41 @@ const FamilyArchive: React.FC = () => {
     const fetchNotifications = async () => {
       try {
         setLoading(true);
-        console.log('Request URL:', mainApi.defaults.baseURL + '/emotions');
+
         const response = await mainApi.get<ApiResponse>('/emotions');
-        console.log('API Response:', response.data);
+
         if (response.data.success) {
           if (response.data.response.length === 0) {
             setError('기록이 없습니다.');
             setLoading(false);
             return;
           }
-          const formattedNotifications: T.ArchiveData[] = response.data.response.map((emotionData) => {
-            const [year, month, day] = emotionData.date.split('-');
-            const formattedDate = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
-            console.log('Formatted Date:', formattedDate);
-            console.log('Original Date:', emotionData.date);
+          const formattedNotifications: T.ArchiveData[] = response.data.response
+            .map((emotionData) => {
+              const [year, month, day] = emotionData.date.split('-');
+              const formattedDate = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
 
-            return {
-              id: emotionData.emotionalReportId.toString(),
-              date: formattedDate,
-              message: `"${emotionData.aiSummary}"`,
-              title: emotionData.title, // 추가된 필드
-              emotion: emotionData.emotion as '긍정' | '보통' | '부정',
-              thumbnailColor:
-                emotionData.emotion === '긍정'
-                  ? 'rgba(51, 204, 102, 0.6)'
-                  : emotionData.emotion === '보통'
-                  ? 'rgba(255, 172, 95, 0.6)'
-                  : 'rgba(255, 92, 92, 0.6)',
-              hasRead: !emotionData.first,
-              summary: emotionData.aiSummary,
-              photoUrl: emotionData.imageUrl || undefined,
-            };
-          });
-          console.log('Formatted Notifications:', formattedNotifications);
+              return {
+                id: emotionData.emotionalReportId.toString(),
+                date: formattedDate,
+                originalDate: emotionData.date, 
+                message: `"${emotionData.aiSummary}"`,
+                title: emotionData.title,
+                emotion: emotionData.emotion as T.MoodType,
+                thumbnailColor:
+                  emotionData.emotion === '긍정'
+                    ? 'rgba(51, 204, 102, 0.6)' as T.ThumbnailColor
+                    : emotionData.emotion === '보통'
+                    ? 'rgba(255, 172, 95, 0.6)' as T.ThumbnailColor
+                    : 'rgba(255, 92, 92, 0.6)' as T.ThumbnailColor,
+                hasRead: !emotionData.first,
+                summary: emotionData.aiSummary,
+                photoUrl: emotionData.imageUrl || undefined,
+              };
+            })
+            // 날짜 기준 내림차순 정렬
+            .sort((a, b) => new Date(b.originalDate!).getTime() - new Date(a.originalDate!).getTime());
+          console.log('Formatted and Sorted Notifications:', formattedNotifications);
           setNotifications(formattedNotifications);
         } else {
           setError('데이터를 가져오지 못했습니다.');
@@ -80,7 +82,6 @@ const FamilyArchive: React.FC = () => {
     fetchNotifications();
   }, []);
 
-  // notifications 상태 업데이트 후 확인
   useEffect(() => {
     console.log('Updated Notifications:', notifications);
   }, [notifications]);
@@ -95,10 +96,7 @@ const FamilyArchive: React.FC = () => {
       <S.MainContainer>
         <S.PageContainer>
           <S.Header>알림</S.Header>
-          <S.MainContent>
-            <S.SectionTitle>기록 목록</S.SectionTitle>
-            <div>로딩 중...</div>
-          </S.MainContent>
+          <C.RenderSkeleton />
         </S.PageContainer>
         <C.FamilyBottomNavigation />
       </S.MainContainer>

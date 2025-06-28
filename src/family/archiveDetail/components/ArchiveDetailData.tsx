@@ -46,7 +46,7 @@ const ArchiveDetailData: React.FC<DiaryDetailPageProps> = ({
             <S.PhotoContent>
               <S.PhotoTitle>오늘의 사진</S.PhotoTitle>
               <S.PhotoImage src={archiveData.photoUrl} onClick={handlePhotoClick} />
-              <S.PhotoHint>탭하여 원본 크기로 보기</S.PhotoHint>
+              {/* <S.PhotoHint>탭하여 원본 크기로 보기</S.PhotoHint> */}
 
               <S.MoodBadge color={archiveData.thumbnailColor ?? '#cccccc'}>
                 <S.MoodBadgeText>
