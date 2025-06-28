@@ -1,0 +1,13 @@
+import { mainApi } from '@/__api__/axiosInstance';
+
+export interface QuestionResponse {
+  conversationId: number;
+  questionId: number;
+  type: 'EMOTION' | 'AUTOBIOGRAPHY';
+  question: string;
+}
+
+export const getEmotionQuestion = async (conversationId: number) => {
+  const res = await mainApi.get(`/question/emotion/${conversationId}`);
+  return res.data.response;
+};

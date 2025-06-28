@@ -3,6 +3,7 @@ import * as S from './style';
 import * as C from '@/allFiles';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
 
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -10,7 +11,7 @@ const Camera = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isCaptured, setIsCaptured] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // 카메라 접근
   useEffect(() => {
     const startCamera = async () => {
@@ -29,9 +30,19 @@ const Camera = () => {
 
     return () => {
       // 컴포넌트 언마운트 시 카메라 정지
-      stream?.getTracks().forEach((track) => track.stop());
+      stream?.getTracks().forEach(track => track.stop());
     };
   }, []);
+
+  useEffect(() => {
+    TextToSpeech('가족에게 안부 사진을 보내보세요');
+  }, []);
+
+  useEffect(() => {
+    if (isCaptured && capturedImage) {
+      TextToSpeech('이 사진을 가족에게 보낼까요?');
+    }
+  }, [isCaptured, capturedImage]);
 
   const handleCapture = () => {
     if (!videoRef.current || !canvasRef.current) return;
@@ -54,12 +65,12 @@ const Camera = () => {
   const handleRetry = () => {
     setCapturedImage(null);
     setIsCaptured(false);
-    window.location.reload()
+    window.location.reload();
   };
 
   const handleSend = () => {
     console.log('보내는 이미지:', capturedImage);
-    navigate('/forwarding')
+    navigate('/forwarding');
     // TODO: 가족에게 보내는 API or 다음 라우팅 처리
   };
 
