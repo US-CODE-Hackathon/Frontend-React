@@ -59,7 +59,10 @@ const FamilyMain = () => {
             <S.Tab active={activeTab === 'weekly'} onClick={() => setActiveTab('weekly')}>
               주간
             </S.Tab>
-            <S.Tab active={activeTab === 'monthly'} onClick={() => setActiveTab('monthly')}>
+            <S.Tab
+              active={activeTab === 'monthly'}
+              onClick={() => alert('구독 후 이용해주세요 (_ _)')}
+            >
               월간
             </S.Tab>
           </S.TabContainer>
