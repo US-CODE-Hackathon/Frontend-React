@@ -50,6 +50,7 @@ const Forwarding = () => {
         const next = prev + 5;
         if (next >= 100) {
           clearInterval(timer);
+          TextToSpeech('가족에게 마음을 전달했어요, 내일도 안부를 전해주세요!');
           setTimeout(() => navigate('/forwarding/success'), 500);
         }
         return next;

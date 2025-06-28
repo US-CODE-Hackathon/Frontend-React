@@ -6,17 +6,16 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } fro
 interface MoodData {
   day: string;
   positive: number;
-  neutral: number;
 }
 
 const chartData: MoodData[] = [
-  { day: '월', positive: 70, neutral: 30 },
-  { day: '화', positive: 85, neutral: 15 },
-  { day: '수', positive: 60, neutral: 40 },
-  { day: '목', positive: 90, neutral: 10 },
-  { day: '금', positive: 75, neutral: 25 },
-  { day: '토', positive: 95, neutral: 5 },
-  { day: '일', positive: 80, neutral: 20 },
+  { day: '월', positive: 70 },
+  { day: '화', positive: 85 },
+  { day: '수', positive: 60 },
+  { day: '목', positive: 90 },
+  { day: '금', positive: 75 },
+  { day: '토', positive: 95 },
+  { day: '일', positive: 80 },
 ];
 
 // 커스텀 범례 컴포넌트

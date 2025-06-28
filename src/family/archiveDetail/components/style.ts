@@ -63,8 +63,9 @@ export const NotificationInfo = styled.div`
   border-radius: 16px;
   padding: 16px;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: baseline;
+  flex-direction: row;
+  gap: 16px;
 `;
 
 export const NotificationQuote = styled.div`
