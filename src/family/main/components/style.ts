@@ -108,7 +108,6 @@ export const StatusValue = styled.div`
   font-weight: 700;
   font-size: 24px;
   color: #1c1c1c;
-  margin-bottom: 8px;
 `;
 
 export const StatusDescription = styled.div`
