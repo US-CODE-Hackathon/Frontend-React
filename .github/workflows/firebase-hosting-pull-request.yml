@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up environment variables for Vite
+        run: |
+          echo "VITE_FASTAPI_API_BASE_URL=${{ secrets.VITE_FASTAPI_API_BASE_URL }}" >> .env
+          echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
       - run: npm install
       - run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
