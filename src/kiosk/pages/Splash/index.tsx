@@ -22,31 +22,45 @@ const KioskSplash: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [finalTranscript, setFinalTranscript] = useState<string>('');
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('초기 텍스트 타이머 설정 | text:', text);
     const timer = setTimeout(() => {
+      console.log('텍스트 상태 변경: initial -> updated');
       setText('updated');
     }, 4000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      console.log('cleanup: 초기 텍스트 타이머 제거');
+      clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
     if (text === 'updated') {
+      console.log('text가 updated로 변경됨 | listening:', listening, '| showModal:', showModal);
       const autoStartTimer = setTimeout(() => {
         if (!listening && !showModal) {
+          console.log('자동 녹음 시작');
           startListening();
+        } else {
+          console.log('자동 녹음 시작 조건 미충족 | listening:', listening, '| showModal:', showModal);
         }
       }, 1000);
 
-      return () => clearTimeout(autoStartTimer);
+      return () => {
+        console.log('cleanup: 자동 녹음 타이머 제거');
+        clearTimeout(autoStartTimer);
+      };
     }
   }, [text, listening, showModal]);
 
   // 모달 표시 조건: 녹음 종료 + 텍스트 존재 + 모달 안 켜짐
   useEffect(() => {
+    console.log('모달 상태 점검 | listening:', listening, '| transcript:', transcript, '| showModal:', showModal);
     if (!listening && transcript && !showModal) {
+      console.log('모달 표시 조건 충족 | finalTranscript 설정:', transcript);
       setFinalTranscript(transcript);
       setShowModal(true);
       stopListening(); // 명시적 정지
@@ -54,18 +68,20 @@ const KioskSplash: React.FC = () => {
   }, [listening, transcript, showModal]);
 
   const handleRetry = (): void => {
+    console.log('handleRetry 호출됨 | 모달 닫고 녹음 재시작');
     setShowModal(false);
     resetRecording();
     setFinalTranscript('');
     setTimeout(() => {
+      console.log('0.5초 후 녹음 재시작');
       startListening();
     }, 500);
   };
 
   const handleConfirm = (): void => {
+    console.log('handleConfirm 호출됨 | 확인된 음성:', finalTranscript);
     setShowModal(false);
-    console.log('확인된 음성:', finalTranscript);
-    navigate("/ongoing")
+    navigate('/ongoing');
   };
 
   const formatDuration = (duration: number): string => {
@@ -86,7 +102,10 @@ const KioskSplash: React.FC = () => {
       <>
         <span>희진 할머니,</span> <br /> 오늘 기분은 어떠세요? <br />
         <S.VoiceWrapper>
-          <button onClick={startListening}>
+          <button onClick={() => {
+            console.log('음성 녹음 버튼 클릭');
+            startListening();
+          }}>
             <MdKeyboardVoice />
           </button>
         </S.VoiceWrapper>
@@ -131,7 +150,7 @@ const KioskSplash: React.FC = () => {
             alt="메인 이미지"
             initial={{ y: 100, scale: 1, opacity: 1 }}
             animate={{ y: 0, scale: 0.8, opacity: 1 }}
-            exit={{ y: -100, scale: 0.8, opacity: 0 }}
+            exit={{ y: -100, scale: 0.8, opacity: 0 }} // 수정된 부분
             transition={{ duration: 0.5, ease: 'easeInOut' }}
           />
           <motion.div
