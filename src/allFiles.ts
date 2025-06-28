@@ -24,6 +24,8 @@ import FamilyAutographyData from './family/autobiography/read/components/Autobio
 import FamilyAutography from './family/autobiography/read/pages';
 import FamilyBioGraphyToast from './family/main/components/BiographyToast';
 
+import Loading from './kiosk/pages/Loading';
+
 export {
   KioskMain,
   KioskSplash,
@@ -50,4 +52,6 @@ export {
   FamilyAutographyData,
   FamilyAutography,
   FamilyBioGraphyToast,
+  // Loading component
+  Loading,
 };

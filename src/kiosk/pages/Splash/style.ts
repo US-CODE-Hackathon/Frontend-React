@@ -158,6 +158,9 @@ export const RecordWrapper = styled.div`
   font-size: 16px;
   color: #525252;
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   & > span {
     font-size: 24px;

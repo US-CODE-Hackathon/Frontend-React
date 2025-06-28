@@ -1,16 +1,27 @@
 import * as C from '@/allFiles';
 import * as S from './style';
 
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MainImg } from '@/kiosk/assets';
 import { useNavigate } from 'react-router-dom';
+import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
 
 const OnGoing = () => {
   const navigate = useNavigate();
 
+  const handleGoing = () => {
+    navigate('/', { state: { type: 'AUTOBIOGRAPHY' } });
+  };
+
   const handleGoingCamera = () => {
-    navigate('/camera')
-  }
+    navigate('/camera');
+  };
+
+  // 초기 음성 안내
+  useEffect(() => {
+    TextToSpeech('할머니 기분이 좋으시다니, 저도 참 좋네요! 저랑 더 대화하실래요?');
+  }, []);
 
   return (
     <S.OnGoingContainer>
@@ -38,7 +49,7 @@ const OnGoing = () => {
             </AnimatePresence>
           </motion.div>
           <S.BtnGroup>
-            <C.KioskButton>대화를 계속할래요</C.KioskButton>
+            <C.KioskButton onClick={handleGoing}>대화를 계속할래요</C.KioskButton>
             <motion.button
               onClick={handleGoingCamera}
               className="replay"

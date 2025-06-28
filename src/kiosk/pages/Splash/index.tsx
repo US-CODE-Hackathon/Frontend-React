@@ -10,29 +10,75 @@ import { useNavigate } from 'react-router-dom';
 import { TextToSpeech } from '@/kiosk/common/services/textToSpeech';
 import { speechToText } from '@/kiosk/common/services/speechToText';
 import { audioConverter } from '@/kiosk/common/utils/audioConverter';
+import { getEmotionQuestion } from '@/kiosk/services/Splash/getEmotionQuestion';
+import { getBiographyQuestion } from '@/kiosk/services/Splash/getBiographyQuestion';
+import type { QuestionResponse } from '@/kiosk/services/Splash/getEmotionQuestion';
+import { postQuestionAnswer } from '@/kiosk/services/Splash/postQuestionAnswer';
+import { useLocation } from 'react-router-dom';
 
 const KioskSplash: React.FC = () => {
   const { recording, recordedBlob, duration, startRecording, stopRecording, resetRecording } =
     useMediaRecorder();
 
-  const [text, setText] = useState<'initial' | 'updated'>('initial');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [finalTranscript, setFinalTranscript] = useState<string>('');
   const hasProcessedRef = useRef(false);
   const [liveTranscript, setLiveTranscript] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
+  const type = location.state?.type ?? 'EMOTION';
+  const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
+  const conversationId = 1;
+  const [text, setText] = useState<'initial' | 'updated'>(() =>
+    type === 'AUTOBIOGRAPHY' ? 'updated' : 'initial',
+  );
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    startRecording(); // 페이지 접속 시 자동 시작
+    setIsSubmitting(true);
+    setError(null);
+
+    const fetchQuestion = async () => {
+      try {
+        const data =
+          type === 'AUTOBIOGRAPHY'
+            ? await getBiographyQuestion(conversationId)
+            : await getEmotionQuestion(conversationId);
+        setQuestionData(data);
+      } catch (err) {
+        console.error('질문 불러오기 실패:', err);
+        setError('질문을 불러오는 데 실패했어요.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    fetchQuestion();
+  }, [conversationId]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      startRecording();
+    }, 300);
+
+    return () => {
+      clearTimeout(timer); // 컴포넌트 언마운트 시 클린업
+    };
   }, []);
 
-  // 초기 음성 안내
   useEffect(() => {
     if (text === 'initial') {
-      TextToSpeech('박희진 어르신, 반갑습니다');
+      TextToSpeech('박희진 어르신, 반갑습니다', () => {
+        if (questionData?.question) {
+          TextToSpeech(questionData.question);
+        }
+      });
+    } else if (text === 'updated' && questionData) {
+      TextToSpeech(questionData.question);
     }
-  }, [text]);
+  }, [text, questionData]);
 
   // 초기 텍스트 변경 타이머
   useEffect(() => {
@@ -104,11 +150,12 @@ const KioskSplash: React.FC = () => {
   };
 
   const handleConfirm = (): void => {
-    if (!recordedBlob) return;
+    if (!recordedBlob || !questionData) return;
 
-    console.log('handleConfirm 호출됨 | 확인된 음성:', liveTranscript);
     setShowModal(false);
     setLiveTranscript('');
+    setFinalTranscript(''); // 기존 텍스트 초기화
+    setIsSubmitting(true); // ✅ 전송중 상태 true
 
     audioConverter(recordedBlob)
       .then(wavBlob => {
@@ -117,11 +164,30 @@ const KioskSplash: React.FC = () => {
       })
       .then(resultText => {
         setFinalTranscript(resultText);
+        const payload = {
+          conversationId: questionData.conversationId,
+          questionId: questionData.questionId,
+          type: questionData.type,
+          question: questionData.question,
+          content: resultText, // ⬅️ resultText로 바꿔주세요
+        };
+
+        console.log('📦 답변 전송 준비:', payload);
+
+        return postQuestionAnswer(payload).then(() => resultText); // ✅ resultText 넘겨줌
+      })
+      .then(resultText => {
+        // ✅ 전송 끝나고 페이지 이동
+        setIsSubmitting(false);
         navigate('/ongoing', { state: { userResponse: resultText } });
       })
       .catch(err => {
-        console.error('❌ STT 실패:', err);
-        setFinalTranscript('인식 실패');
+        console.error('❌ 전송 실패:', err);
+        setFinalTranscript('전송 실패');
+        setIsSubmitting(false); // 실패 시 다시 false
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
   };
 
@@ -131,7 +197,84 @@ const KioskSplash: React.FC = () => {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const renderVoiceUI = () => (
+    <>
+      <S.VoiceWrapper>
+        {recording && (
+          <S.GuideText>
+            👇 이 버튼을 누르면 <strong>녹음이 끝나요!</strong>
+          </S.GuideText>
+        )}
+        <button
+          onClick={() => {
+            console.log('🎙 버튼 클릭 → 녹음 종료 시도');
+            stopRecording();
+          }}
+          disabled={!recording}
+        >
+          <MdKeyboardVoice />
+        </button>
+      </S.VoiceWrapper>
+      {recording && (
+        <S.RecordWrapper>
+          목소리가 녹음되고 있어요
+          <br />
+          {recording && (
+            <div
+              style={{
+                marginTop: '10px',
+                fontSize: '0.9em',
+                color: '#333',
+                background: '#f0f0f0',
+                padding: '8px',
+                borderRadius: '8px',
+                maxWidth: '300px',
+                wordBreak: 'keep-all',
+              }}
+            >
+              실시간: "{liveTranscript}"
+            </div>
+          )}
+        </S.RecordWrapper>
+      )}
+      {showModal && (
+        <S.ModalOverlay>
+          <S.ModalContent>
+            <h2>말씀하신 내용이 맞나요?</h2>
+            <h3>인식된 내용을 확인해주세요</h3>
+            <div className="transcript">{finalTranscript || '인식된 내용이 없습니다.'}</div>
+            <S.BtnGroup>
+              <C.KioskButton onClick={handleConfirm}>맞아요</C.KioskButton>
+              <motion.button
+                onClick={handleRetry}
+                className="replay"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+              >
+                다시 말하기
+              </motion.button>
+            </S.BtnGroup>
+            <p>
+              💡 내용이 틀렸다면 <span>"다시 말하기"</span>를 눌러주세요
+            </p>
+          </S.ModalContent>
+        </S.ModalOverlay>
+      )}
+    </>
+  );
+
   const renderTextContent = (): JSX.Element => {
+    if (type === 'AUTOBIOGRAPHY' && questionData) {
+      return (
+        <>
+          <span>희진 할머니,</span> <br />
+          {questionData.question}
+          {renderVoiceUI()}
+        </>
+      );
+    }
+
     if (text === 'initial') {
       return (
         <>
@@ -140,70 +283,36 @@ const KioskSplash: React.FC = () => {
       );
     }
 
+    if (error) {
+      return (
+        <div style={{ color: 'red', fontWeight: 'bold' }}>
+          ⚠️ {error}
+          <br />
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              marginTop: '8px',
+              padding: '6px 12px',
+              border: '1px solid #ccc',
+              background: '#fff',
+              borderRadius: '4px',
+            }}
+          >
+            다시 시도하기
+          </button>
+        </div>
+      );
+    }
+
+    if (!questionData) {
+      return <div>질문이 없습니다.</div>;
+    }
+
     return (
       <>
-        <span>희진 할머니,</span> <br /> 오늘 기분은 어떠세요? <br />
-        <S.VoiceWrapper>
-          <S.GuideText>
-            👇 이 버튼을 누르면 <strong>녹음이 끝나요!</strong>
-          </S.GuideText>
-          <button
-            onClick={() => {
-              console.log('🎙 버튼 클릭 → 녹음 종료 시도');
-              stopRecording();
-            }}
-            disabled={!recording}
-          >
-            <MdKeyboardVoice />
-          </button>
-        </S.VoiceWrapper>
-        {recording && (
-          <S.RecordWrapper>
-            목소리가 녹음되고 있어요 <br />
-            {/* <span>{formatDuration(duration)}</span> */}
-            <br />
-            {recording && (
-              <div
-                style={{
-                  marginTop: '10px',
-                  fontSize: '0.9em',
-                  color: '#333',
-                  background: '#f0f0f0',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  maxWidth: '300px',
-                  wordBreak: 'keep-all',
-                }}
-              >
-                실시간: "{liveTranscript}"
-              </div>
-            )}
-          </S.RecordWrapper>
-        )}
-        {showModal && (
-          <S.ModalOverlay>
-            <S.ModalContent>
-              <h2>말씀하신 내용이 맞나요?</h2>
-              <h3>인식된 내용을 확인해주세요</h3>
-              <div className="transcript">{finalTranscript || '인식된 내용이 없습니다.'}</div>
-              <S.BtnGroup>
-                <C.KioskButton onClick={handleConfirm}>맞아요</C.KioskButton>
-                <motion.button
-                  onClick={handleRetry}
-                  className="replay"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: 'easeInOut' }}
-                >
-                  다시 말하기
-                </motion.button>
-              </S.BtnGroup>
-              <p>
-                💡 내용이 틀렸다면 <span>"다시 말하기"</span>를 눌러주세요
-              </p>
-            </S.ModalContent>
-          </S.ModalOverlay>
-        )}
+        <span>희진 할머니,</span> <br />
+        {questionData.question}
+        {renderVoiceUI()}
       </>
     );
   };
@@ -228,15 +337,27 @@ const KioskSplash: React.FC = () => {
             transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.2 }}
           >
             <AnimatePresence mode="wait">
-              <motion.h1
-                key={text}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-              >
-                {renderTextContent()}
-              </motion.h1>
+              {isSubmitting ? (
+                <motion.h1
+                  key="submitting"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                  답변을 전송하고 있어요 ☺️
+                </motion.h1>
+              ) : (
+                <motion.h1
+                  key={text}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                  {renderTextContent()}
+                </motion.h1>
+              )}
             </AnimatePresence>
           </motion.div>
         </S.SplashImgWrapper>

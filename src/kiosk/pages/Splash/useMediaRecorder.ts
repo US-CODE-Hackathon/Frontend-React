@@ -15,28 +15,28 @@ const useMediaRecorder = () => {
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
 
-  const detectSilence = () => {
-    if (!analyserRef.current || !dataArrayRef.current) return;
-    analyserRef.current.getByteTimeDomainData(dataArrayRef.current);
+  // const detectSilence = () => {
+  //   if (!analyserRef.current || !dataArrayRef.current) return;
+  //   analyserRef.current.getByteTimeDomainData(dataArrayRef.current);
 
-    const isSilent = dataArrayRef.current.every(value => value >= 127 - 5 && value <= 127 + 5);
+  //   const isSilent = dataArrayRef.current.every(value => value >= 127 - 5 && value <= 127 + 5);
 
-    if (isSilent) {
-      if (!silenceRef.current) {
-        silenceRef.current = setTimeout(() => {
-          console.log('🛑 3초 무음 지속 → 녹음 종료');
-          stopRecording();
-        }, 3000);
-      }
-    } else {
-      if (silenceRef.current) {
-        clearTimeout(silenceRef.current);
-        silenceRef.current = null;
-      }
-    }
+  //   if (isSilent) {
+  //     if (!silenceRef.current) {
+  //       silenceRef.current = setTimeout(() => {
+  //         console.log('🛑 3초 무음 지속 → 녹음 종료');
+  //         stopRecording();
+  //       }, 3000);
+  //     }
+  //   } else {
+  //     if (silenceRef.current) {
+  //       clearTimeout(silenceRef.current);
+  //       silenceRef.current = null;
+  //     }
+  //   }
 
-    requestAnimationFrame(detectSilence);
-  };
+  //   requestAnimationFrame(detectSilence);
+  // };
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -71,7 +71,7 @@ const useMediaRecorder = () => {
     dataArrayRef.current = new Uint8Array(bufferLength);
 
     sourceRef.current.connect(analyserRef.current);
-    detectSilence();
+    // detectSilence();
   };
 
   const stopRecording = () => {
