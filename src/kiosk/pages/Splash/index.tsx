@@ -15,6 +15,7 @@ import { getBiographyQuestion } from '@/kiosk/services/Splash/getBiographyQuesti
 import type { QuestionResponse } from '@/kiosk/services/Splash/getEmotionQuestion';
 import { postQuestionAnswer } from '@/kiosk/services/Splash/postQuestionAnswer';
 import { useLocation } from 'react-router-dom';
+import { useConversationStore } from '@/kiosk/stores/useConversationStore';
 
 const KioskSplash: React.FC = () => {
   const { recording, recordedBlob, startRecording, stopRecording, resetRecording } =
@@ -29,13 +30,19 @@ const KioskSplash: React.FC = () => {
   const location = useLocation();
   const type = location.state?.type ?? 'EMOTION';
   const [questionData, setQuestionData] = useState<QuestionResponse | null>(null);
-  const conversationId = 1;
   const [text, setText] = useState<'initial' | 'updated'>(() =>
     type === 'AUTOBIOGRAPHY' ? 'updated' : 'initial',
   );
+  const { conversationId, setConversationId } = useConversationStore();
   const hasSpokenRef = useRef(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (questionData?.conversationId && !conversationId) {
+      setConversationId(questionData.conversationId);
+    }
+  }, [questionData, conversationId]);
 
   useEffect(() => {
     setIsSubmitting(true);
@@ -45,8 +52,8 @@ const KioskSplash: React.FC = () => {
       try {
         const data =
           type === 'AUTOBIOGRAPHY'
-            ? await getBiographyQuestion(conversationId)
-            : await getEmotionQuestion(conversationId);
+            ? conversationId && (await getBiographyQuestion(conversationId))
+            : await getEmotionQuestion();
         setQuestionData(data);
       } catch (err) {
         console.error('질문 불러오기 실패:', err);

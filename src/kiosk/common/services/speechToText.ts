@@ -1,4 +1,4 @@
-import { mainApi } from '@/__api__/axiosInstance';
+import { mainApi } from '@/api/axiosInstance';
 
 export const speechToText = async (file: File): Promise<string> => {
   const formData = new FormData();
